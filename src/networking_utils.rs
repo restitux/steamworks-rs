@@ -4,7 +4,7 @@ use std::convert::TryInto;
 use std::ffi::{c_void, CStr};
 use std::sync::Arc;
 
-use steamworks_sys as sys;
+use gamenetworkingsockets_sys as sys;
 
 /// Access to the steam networking sockets interface
 pub struct NetworkingUtils<Manager> {
@@ -161,7 +161,7 @@ impl RelayNetworkStatus {
 }
 
 impl From<sys::SteamRelayNetworkStatus_t> for RelayNetworkStatus {
-    fn from(status: steamworks_sys::SteamRelayNetworkStatus_t) -> Self {
+    fn from(status: gamenetworkingsockets_sys::SteamRelayNetworkStatus_t) -> Self {
         unsafe {
             Self {
                 availability: status.m_eAvail.try_into(),

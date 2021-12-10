@@ -4,7 +4,7 @@ use crate::networking_types::{
 };
 use crate::{register_callback, CallbackHandle, Inner};
 use std::sync::{Arc, Weak};
-use steamworks_sys as sys;
+use gamenetworkingsockets_sys as sys;
 use sys::ISteamNetworkingSockets;
 
 /// All independent connections (to a remote host) and listening sockets share the same Callback for

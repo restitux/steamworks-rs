@@ -30,7 +30,7 @@ use crate::{register_callback, Callback, Inner, SteamError};
 use std::ffi::c_void;
 use std::sync::{Arc, Weak};
 
-use steamworks_sys as sys;
+use gamenetworkingsockets_sys as sys;
 
 /// Access to the steam networking messages interface
 pub struct NetworkingMessages<Manager> {

@@ -9,7 +9,7 @@ use std::fmt::{Debug, Display, Formatter};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
 use std::panic::catch_unwind;
 use std::sync::Arc;
-use steamworks_sys as sys;
+use gamenetworkingsockets_sys as sys;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -493,7 +493,7 @@ impl NetworkingConfigValue {
 }
 
 impl From<NetworkingConfigValue> for sys::ESteamNetworkingConfigValue {
-    fn from(value: NetworkingConfigValue) -> steamworks_sys::ESteamNetworkingConfigValue {
+    fn from(value: NetworkingConfigValue) -> gamenetworkingsockets_sys::ESteamNetworkingConfigValue {
         match value {
             NetworkingConfigValue::FakePacketLossSend => sys::ESteamNetworkingConfigValue::k_ESteamNetworkingConfig_FakePacketLoss_Send,
             NetworkingConfigValue::FakePacketLossRecv => sys::ESteamNetworkingConfigValue::k_ESteamNetworkingConfig_FakePacketLoss_Recv,
@@ -747,11 +747,11 @@ pub enum NetConnectionEnd {
 
     // We couldn't rendezvous with the remote host because
     // they aren't logged into Steam
-    RemoteNotLoggedIn,
+    //RemoteNotLoggedIn,
 
     // We couldn't rendezvous with the remote host because
     // they aren't running the right application.
-    RemoteNotRunningApp,
+    //RemoteNotRunningApp,
 
     // Something wrong with the protocol version you are using.
     // (Probably the code you are running is too old.)
@@ -783,7 +783,7 @@ pub enum NetConnectionEnd {
     // We're having trouble talking to the relevant relay.
     // We don't have enough information to say whether the
     // problem is on our end or not.
-    MiscRelayConnectivity,
+    //MiscRelayConnectivity,
 
     // There's some trouble talking to Steam.
     MiscSteamConnectivity,
@@ -838,14 +838,14 @@ impl From<NetConnectionEnd> for sys::ESteamNetConnectionEnd {
             NetConnectionEnd::RemoteTimeout => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_Timeout,
             NetConnectionEnd::RemoteBadEncrypt => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadCrypt,
             NetConnectionEnd::RemoteBadCert => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadCert,
-            NetConnectionEnd::RemoteNotLoggedIn => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotLoggedIn,
-            NetConnectionEnd::RemoteNotRunningApp => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotRunningApp,
+            //NetConnectionEnd::RemoteNotLoggedIn => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotLoggedIn,
+            //NetConnectionEnd::RemoteNotRunningApp => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotRunningApp,
             NetConnectionEnd::RemoteBadProtocolVersion => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadProtocolVersion,
             NetConnectionEnd::RemoteP2PICENoPublicAddresses => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_P2P_ICE_NoPublicAddresses,
             NetConnectionEnd::MiscGeneric => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_Generic,
             NetConnectionEnd::MiscInternalError => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_InternalError,
             NetConnectionEnd::MiscTimeout => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_Timeout,
-            NetConnectionEnd::MiscRelayConnectivity => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_RelayConnectivity,
+            //NetConnectionEnd::MiscRelayConnectivity => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_RelayConnectivity,
             NetConnectionEnd::MiscSteamConnectivity => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_SteamConnectivity,
             NetConnectionEnd::MiscNoRelaySessionsToClient => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_NoRelaySessionsToClient,
             NetConnectionEnd::MiscP2PRendezvous => sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_P2P_Rendezvous,
@@ -876,14 +876,14 @@ impl TryFrom<i32> for NetConnectionEnd {
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_Timeout as i32 => Ok(NetConnectionEnd::RemoteTimeout),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadCrypt as i32 => Ok(NetConnectionEnd::RemoteBadEncrypt),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadCert as i32 => Ok(NetConnectionEnd::RemoteBadCert),
-            end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotLoggedIn as i32 => Ok(NetConnectionEnd::RemoteNotLoggedIn),
-            end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotRunningApp as i32 => Ok(NetConnectionEnd::RemoteNotRunningApp),
+            //end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotLoggedIn as i32 => Ok(NetConnectionEnd::RemoteNotLoggedIn),
+            //end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotRunningApp as i32 => Ok(NetConnectionEnd::RemoteNotRunningApp),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadProtocolVersion as i32 => Ok(NetConnectionEnd::RemoteBadProtocolVersion),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_P2P_ICE_NoPublicAddresses as i32 => Ok(NetConnectionEnd::RemoteP2PICENoPublicAddresses),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_Generic as i32 => Ok(NetConnectionEnd::MiscGeneric),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_InternalError as i32 => Ok(NetConnectionEnd::MiscInternalError),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_Timeout as i32 => Ok(NetConnectionEnd::MiscTimeout),
-            end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_RelayConnectivity as i32 => Ok(NetConnectionEnd::MiscRelayConnectivity),
+            //end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_RelayConnectivity as i32 => Ok(NetConnectionEnd::MiscRelayConnectivity),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_SteamConnectivity as i32 => Ok(NetConnectionEnd::MiscSteamConnectivity),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_NoRelaySessionsToClient as i32 => Ok(NetConnectionEnd::MiscNoRelaySessionsToClient),
             end if end == sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_P2P_Rendezvous as i32 => Ok(NetConnectionEnd::MiscP2PRendezvous),
@@ -895,7 +895,7 @@ impl TryFrom<i32> for NetConnectionEnd {
 }
 
 impl From<sys::ESteamNetConnectionEnd> for NetConnectionEnd {
-    fn from(end: steamworks_sys::ESteamNetConnectionEnd) -> Self {
+    fn from(end: gamenetworkingsockets_sys::ESteamNetConnectionEnd) -> Self {
         match end {
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_App_Generic => NetConnectionEnd::AppGeneric,
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_AppException_Generic => NetConnectionEnd::AppException,
@@ -908,14 +908,14 @@ impl From<sys::ESteamNetConnectionEnd> for NetConnectionEnd {
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_Timeout => NetConnectionEnd::RemoteTimeout,
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadCrypt => NetConnectionEnd::RemoteBadEncrypt,
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadCert => NetConnectionEnd::RemoteBadCert,
-            sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotLoggedIn => NetConnectionEnd::RemoteNotLoggedIn,
-            sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotRunningApp => { NetConnectionEnd::RemoteNotRunningApp }
+            //sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotLoggedIn => NetConnectionEnd::RemoteNotLoggedIn,
+            //sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_NotRunningApp => { NetConnectionEnd::RemoteNotRunningApp }
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_BadProtocolVersion => { NetConnectionEnd::RemoteBadProtocolVersion }
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Remote_P2P_ICE_NoPublicAddresses => { NetConnectionEnd::RemoteP2PICENoPublicAddresses }
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_Generic => NetConnectionEnd::MiscGeneric,
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_InternalError => NetConnectionEnd::MiscInternalError,
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_Timeout => NetConnectionEnd::MiscTimeout,
-            sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_RelayConnectivity => { NetConnectionEnd::MiscRelayConnectivity }
+            //sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_RelayConnectivity => { NetConnectionEnd::MiscRelayConnectivity }
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_SteamConnectivity => { NetConnectionEnd::MiscSteamConnectivity }
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_NoRelaySessionsToClient => { NetConnectionEnd::MiscNoRelaySessionsToClient }
             sys::ESteamNetConnectionEnd::k_ESteamNetConnectionEnd_Misc_P2P_Rendezvous => { NetConnectionEnd::MiscP2PRendezvous }
@@ -1072,7 +1072,7 @@ impl Debug for NetConnectionInfo {
 }
 
 impl From<sys::SteamNetConnectionInfo_t> for NetConnectionInfo {
-    fn from(info: steamworks_sys::SteamNetConnectionInfo_t) -> Self {
+    fn from(info: gamenetworkingsockets_sys::SteamNetConnectionInfo_t) -> Self {
         Self { inner: info }
     }
 }
@@ -1300,57 +1300,78 @@ impl NetworkingConfigEntry {
         debug_assert_eq!(value_type.data_type(), NetworkingConfigDataType::Int32);
 
         let mut config = Self::new_uninitialized_config_value();
-        unsafe {
-            sys::SteamAPI_SteamNetworkingConfigValue_t_SetInt32(
-                &mut config,
-                value_type.into(),
-                value,
-            );
-            NetworkingConfigEntry { inner: config }
-        }
+        config.m_eValue = value_type.into();
+        config.m_eDataType = sys::ESteamNetworkingConfigDataType::k_ESteamNetworkingConfig_Int32;
+        config.m_val = sys::SteamNetworkingConfigValue_t__bindgen_ty_1 { m_int32: value };
+        NetworkingConfigEntry { inner: config }
+        // This function doesn't exist in gns
+        //unsafe {
+        //    sys::SteamAPI_SteamNetworkingConfigValue_t_SetInt32(
+        //        &mut config,
+        //        value_type.into(),
+        //        value,
+        //    );
+        //    NetworkingConfigEntry { inner: config }
+        //}
     }
 
     pub fn new_int64(value_type: NetworkingConfigValue, value: i64) -> Self {
         debug_assert_eq!(value_type.data_type(), NetworkingConfigDataType::Int64);
 
         let mut config = Self::new_uninitialized_config_value();
-        unsafe {
-            sys::SteamAPI_SteamNetworkingConfigValue_t_SetInt64(
-                &mut config,
-                value_type.into(),
-                value,
-            );
-            NetworkingConfigEntry { inner: config }
-        }
+        config.m_eValue = value_type.into();
+        config.m_eDataType = sys::ESteamNetworkingConfigDataType::k_ESteamNetworkingConfig_Int64;
+        config.m_val = sys::SteamNetworkingConfigValue_t__bindgen_ty_1 { m_int64: value };
+        NetworkingConfigEntry { inner: config }
+        // This function doesn't exist in gns
+        //unsafe {
+        //    sys::SteamAPI_SteamNetworkingConfigValue_t_SetInt64(
+        //        &mut config,
+        //        value_type.into(),
+        //        value,
+        //    );
+        //    NetworkingConfigEntry { inner: config }
+        //}
     }
 
     pub fn new_float(value_type: NetworkingConfigValue, value: f32) -> Self {
         debug_assert_eq!(value_type.data_type(), NetworkingConfigDataType::Int64);
 
         let mut config = Self::new_uninitialized_config_value();
-        unsafe {
-            sys::SteamAPI_SteamNetworkingConfigValue_t_SetFloat(
-                &mut config,
-                value_type.into(),
-                value,
-            );
-            NetworkingConfigEntry { inner: config }
-        }
+        config.m_eValue = value_type.into();
+        config.m_eDataType = sys::ESteamNetworkingConfigDataType::k_ESteamNetworkingConfig_Float;
+        config.m_val = sys::SteamNetworkingConfigValue_t__bindgen_ty_1 { m_float: value };
+        NetworkingConfigEntry { inner: config }
+        // This function doesn't exist in gns
+        //unsafe {
+        //    sys::SteamAPI_SteamNetworkingConfigValue_t_SetFloat(
+        //        &mut config,
+        //        value_type.into(),
+        //        value,
+        //    );
+        //    NetworkingConfigEntry { inner: config }
+        //}
     }
 
     pub fn new_string(value_type: NetworkingConfigValue, value: &str) -> Self {
         debug_assert_eq!(value_type.data_type(), NetworkingConfigDataType::String);
 
         let mut config = Self::new_uninitialized_config_value();
-        unsafe {
-            let c_str = CString::new(value).expect("Rust string could not be converted");
-            sys::SteamAPI_SteamNetworkingConfigValue_t_SetString(
-                &mut config,
-                value_type.into(),
-                c_str.as_ptr(),
-            );
-            NetworkingConfigEntry { inner: config }
-        }
+        config.m_eValue = value_type.into();
+        config.m_eDataType = sys::ESteamNetworkingConfigDataType::k_ESteamNetworkingConfig_Ptr;
+        let c_str = CString::new(value).expect("Rust string could not be converted");
+        config.m_val = sys::SteamNetworkingConfigValue_t__bindgen_ty_1 { m_string: c_str.as_ptr() };
+        NetworkingConfigEntry { inner: config }
+        // This function doesn't exist in gns
+        //unsafe {
+        //    let c_str = CString::new(value).expect("Rust string could not be converted");
+        //    sys::SteamAPI_SteamNetworkingConfigValue_t_SetString(
+        //        &mut config,
+        //        value_type.into(),
+        //        c_str.as_ptr(),
+        //    );
+        //    NetworkingConfigEntry { inner: config }
+        //}
     }
 }
 
@@ -1505,7 +1526,7 @@ impl Debug for NetworkingIdentity {
 }
 
 impl From<sys::SteamNetworkingIdentity> for NetworkingIdentity {
-    fn from(id: steamworks_sys::SteamNetworkingIdentity) -> Self {
+    fn from(id: gamenetworkingsockets_sys::SteamNetworkingIdentity) -> Self {
         NetworkingIdentity { inner: id }
     }
 }

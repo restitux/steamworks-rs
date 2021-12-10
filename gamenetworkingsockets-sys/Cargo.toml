@@ -1,12 +1,12 @@
 [package]
-name = "steamworks-sys"
+name = "gamenetworkingsockets-sys"
 version = "0.8.0"
-authors = ["Thinkofname"]
+authors = ["restitux"]
 build = "build.rs"
-description = "Provides raw bindings to the steamworks sdk"
+description = "Provides raw bindings to the GameNetworkingSockets library"
 license = "MIT / Apache-2.0"
-repository = "https://github.com/Noxime/steamworks-rs"
-documentation = "https://docs.rs/steamworks-sys"
+repository = "https://github.com/restitux/gamenetworkingsockets-rs"
+documentation = "https://docs.rs/gamenetworkingsockets-sys"
 edition = "2018"
 
 [package.metadata.docs.rs]
@@ -22,4 +22,6 @@ docs-only = []
 [dependencies]
 
 [build-dependencies]
+cmake = "0.1"
+pkg-config = "0.3"
 bindgen = "0.59"
