@@ -72,8 +72,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let out_dir = compile_gns();
     let lib_dir = out_dir.join("lib");
 
-    println!("cargo:rustc-link-search={}/lib", lib_dir.to_string_lossy());
-    println!("cargo:rustc-link-lib=GameNetworkingSockets_s");
+    println!("cargo:rustc-link-search=native={}", lib_dir.to_string_lossy());
+    println!("cargo:rustc-link-lib=static=GameNetworkingSockets_s");
+
+    println!("cargo:rustc-link-lib=dylib=stdc++");
+
+    let gns_deps = vec![
+        "protobuf",
+        "openssl",
+    ];
+
+    for dep in gns_deps {
+        for lib in pkg_config::probe_library(dep).unwrap().libs {
+            println!("cargo:rustc-link-lib={}", lib)
+        }
+    }
 
     let include_dir = out_dir.join("include");
 
