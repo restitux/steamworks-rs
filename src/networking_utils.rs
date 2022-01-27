@@ -1,5 +1,5 @@
 use crate::networking_types::{NetworkingAvailabilityResult, NetworkingMessage};
-use crate::{register_callback, Callback, Inner};
+//use crate::{register_callback, Callback, Inner};
 use std::convert::TryInto;
 use std::ffi::{c_void, CStr};
 use std::sync::Arc;
@@ -7,15 +7,17 @@ use std::sync::Arc;
 use gamenetworkingsockets_sys as sys;
 
 /// Access to the steam networking sockets interface
-pub struct NetworkingUtils<Manager> {
+pub struct NetworkingUtils {
     pub(crate) utils: *mut sys::ISteamNetworkingUtils,
-    pub(crate) inner: Arc<Inner<Manager>>,
+    //pub(crate) inner: Arc<Inner>,
 }
 
-unsafe impl<T> Send for NetworkingUtils<T> {}
-unsafe impl<T> Sync for NetworkingUtils<T> {}
+//unsafe impl<T> Send for NetworkingUtils<T> {}
+//unsafe impl<T> Sync for NetworkingUtils<T> {}
+unsafe impl Send for NetworkingUtils {}
+unsafe impl Sync for NetworkingUtils {}
 
-impl<Manager> NetworkingUtils<Manager> {
+impl NetworkingUtils {
     /// Allocate and initialize a message object.  Usually the reason
     /// you call this is to pass it to ISteamNetworkingSockets::SendMessages.
     /// The returned object will have all of the relevant fields cleared to zero.
@@ -30,13 +32,13 @@ impl<Manager> NetworkingUtils<Manager> {
     /// If cbAllocateBuffer=0, then no buffer is allocated.  m_pData will be NULL,
     /// m_cbSize will be zero, and m_pfnFreeData will be NULL.  You will need to
     /// set each of these.
-    pub fn allocate_message(&self, buffer_size: usize) -> NetworkingMessage<Manager> {
+    pub fn allocate_message(&self, buffer_size: usize) -> NetworkingMessage {
         unsafe {
             let message =
                 sys::SteamAPI_ISteamNetworkingUtils_AllocateMessage(self.utils, buffer_size as _);
             NetworkingMessage {
                 message,
-                _inner: self.inner.clone(),
+                //_inner: self.inner.clone(),
             }
         }
     }
@@ -84,8 +86,7 @@ impl<Manager> NetworkingUtils<Manager> {
     pub fn detailed_relay_network_status(&self) -> RelayNetworkStatus {
         unsafe {
             let mut status = sys::SteamRelayNetworkStatus_t {
-                m_eAvail:
-                    sys::ESteamNetworkingAvailability::k_ESteamNetworkingAvailability_Unknown,
+                m_eAvail: sys::ESteamNetworkingAvailability::k_ESteamNetworkingAvailability_Unknown,
                 m_bPingMeasurementInProgress: 0,
                 m_eAvailNetworkConfig:
                     sys::ESteamNetworkingAvailability::k_ESteamNetworkingAvailability_Unknown,
@@ -98,19 +99,19 @@ impl<Manager> NetworkingUtils<Manager> {
         }
     }
 
-    /// Register the callback for relay network status updates.
-    ///
-    /// Calling this more than once replaces the previous callback.
-    pub fn relay_network_status_callback(
-        &self,
-        mut callback: impl FnMut(RelayNetworkStatus) + Send + 'static,
-    ) {
-        unsafe {
-            register_callback(&self.inner, move |status: RelayNetworkStatusCallback| {
-                callback(status.status);
-            });
-        }
-    }
+    ///// Register the callback for relay network status updates.
+    /////
+    ///// Calling this more than once replaces the previous callback.
+    //pub fn relay_network_status_callback(
+    //    &self,
+    //    mut callback: impl FnMut(RelayNetworkStatus) + Send + 'static,
+    //) {
+    //    unsafe {
+    //        register_callback(&self.inner, move |status: RelayNetworkStatusCallback| {
+    //            callback(status.status);
+    //        });
+    //    }
+    //}
 }
 
 pub struct RelayNetworkStatus {
@@ -182,58 +183,58 @@ struct RelayNetworkStatusCallback {
     status: RelayNetworkStatus,
 }
 
-unsafe impl Callback for RelayNetworkStatusCallback {
-    const ID: i32 = sys::SteamRelayNetworkStatus_t_k_iCallback as _;
-    const SIZE: i32 = std::mem::size_of::<sys::SteamRelayNetworkStatus_t>() as _;
+//unsafe impl Callback for RelayNetworkStatusCallback {
+//    const ID: i32 = sys::SteamRelayNetworkStatus_t_k_iCallback as _;
+//    const SIZE: i32 = std::mem::size_of::<sys::SteamRelayNetworkStatus_t>() as _;
+//
+//    unsafe fn from_raw(raw: *mut c_void) -> Self {
+//        let status = *(raw as *mut sys::SteamRelayNetworkStatus_t);
+//        Self {
+//            status: status.into(),
+//        }
+//    }
+//}
 
-    unsafe fn from_raw(raw: *mut c_void) -> Self {
-        let status = *(raw as *mut sys::SteamRelayNetworkStatus_t);
-        Self {
-            status: status.into(),
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::Client;
-    use std::time::Duration;
-
-    #[test]
-    fn test_get_networking_status() {
-        let (client, single) = Client::init().unwrap();
-        std::thread::spawn(move || single.run_callbacks());
-
-        let utils = client.networking_utils();
-        let status = utils.detailed_relay_network_status();
-        println!(
-            "status: {:?}, network_config: {:?}, any_relay: {:?}, message: {}",
-            status.availability(),
-            status.network_config(),
-            status.any_relay(),
-            status.debugging_message()
-        );
-
-        utils.init_relay_network_access();
-
-        let status = utils.detailed_relay_network_status();
-        println!(
-            "status: {:?}, network_config: {:?}, any_relay: {:?}, message: {}",
-            status.availability(),
-            status.network_config(),
-            status.any_relay(),
-            status.debugging_message()
-        );
-
-        std::thread::sleep(Duration::from_millis(500));
-
-        let status = utils.detailed_relay_network_status();
-        println!(
-            "status: {:?}, network_config: {:?}, any_relay: {:?}, message: {}",
-            status.availability(),
-            status.network_config(),
-            status.any_relay(),
-            status.debugging_message()
-        );
-    }
-}
+//#[cfg(test)]
+//mod tests {
+//    use crate::Client;
+//    use std::time::Duration;
+//
+//    #[test]
+//    fn test_get_networking_status() {
+//        let (client, single) = Client::init().unwrap();
+//        std::thread::spawn(move || single.run_callbacks());
+//
+//        let utils = client.networking_utils();
+//        let status = utils.detailed_relay_network_status();
+//        println!(
+//            "status: {:?}, network_config: {:?}, any_relay: {:?}, message: {}",
+//            status.availability(),
+//            status.network_config(),
+//            status.any_relay(),
+//            status.debugging_message()
+//        );
+//
+//        utils.init_relay_network_access();
+//
+//        let status = utils.detailed_relay_network_status();
+//        println!(
+//            "status: {:?}, network_config: {:?}, any_relay: {:?}, message: {}",
+//            status.availability(),
+//            status.network_config(),
+//            status.any_relay(),
+//            status.debugging_message()
+//        );
+//
+//        std::thread::sleep(Duration::from_millis(500));
+//
+//        let status = utils.detailed_relay_network_status();
+//        println!(
+//            "status: {:?}, network_config: {:?}, any_relay: {:?}, message: {}",
+//            status.availability(),
+//            status.network_config(),
+//            status.any_relay(),
+//            status.debugging_message()
+//        );
+//    }
+//}

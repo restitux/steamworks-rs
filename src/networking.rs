@@ -3,33 +3,33 @@
 //! In the future you should use [`networking_sockets`][../networking_sockets], but for now the wrapper for the new API
 //! is still unfinished.
 
-use super::*;
-
-/// Access to the steam networking interface
-pub struct Networking<Manager> {
-    pub(crate) net: *mut sys::ISteamNetworkingSockets,
-    pub(crate) _inner: Arc<Inner<Manager>>,
-}
-
-/// The method used to send a packet
-#[derive(Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-pub enum SendType {
-    /// Send the packet directly over udp.
-    ///
-    /// Can't be larger than 1200 bytes
-    Unreliable,
-    /// Like `Unreliable` but doesn't buffer packets
-    /// sent before the connection has started.
-    UnreliableNoDelay,
-    /// Reliable packet sending.
-    ///
-    /// Can't be larger than 1 megabyte.
-    Reliable,
-    /// Like `Reliable` but applies the nagle
-    /// algorithm to packets being sent
-    ReliableWithBuffering,
-}
+//use super::*;
+//
+///// Access to the steam networking interface
+//pub struct Networking<Manager> {
+//    pub(crate) net: *mut sys::ISteamNetworkingSockets,
+//    pub(crate) _inner: Arc<Inner<Manager>>,
+//}
+//
+///// The method used to send a packet
+//#[derive(Clone, Debug)]
+//#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+//pub enum SendType {
+//    /// Send the packet directly over udp.
+//    ///
+//    /// Can't be larger than 1200 bytes
+//    Unreliable,
+//    /// Like `Unreliable` but doesn't buffer packets
+//    /// sent before the connection has started.
+//    UnreliableNoDelay,
+//    /// Reliable packet sending.
+//    ///
+//    /// Can't be larger than 1 megabyte.
+//    Reliable,
+//    /// Like `Reliable` but applies the nagle
+//    /// algorithm to packets being sent
+//    ReliableWithBuffering,
+//}
 
 //impl <Manager> Networking<Manager> {
 //    /// Accepts incoming packets from the given user
