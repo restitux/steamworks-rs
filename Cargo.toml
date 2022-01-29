@@ -1,5 +1,5 @@
 [package]
-name = "gamenetworkingsockets-rs"
+name = "gamenetworkingsockets"
 version = "0.8.0"
 authors = ["restitux"]
 description = "Provides rust friendly bindings to the GameNetworkingSockets library"
@@ -22,7 +22,8 @@ docs-only = ["gamenetworkingsockets-sys/docs-only"]
 [workspace]
 members = [
     "./gamenetworkingsockets-sys",
-#    "examples/chat-example"
+    "examples/client",
+    "examples/server"
 ]
 
 [dependencies]

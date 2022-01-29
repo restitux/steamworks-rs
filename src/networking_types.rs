@@ -1390,7 +1390,7 @@ impl NetworkingConfigEntry {
     }
 
     pub fn new_ptr(value_type: NetworkingConfigValue, value: *mut c_void) -> Self {
-        debug_assert_eq!(value_type.data_type(), NetworkingConfigDataType::String);
+        debug_assert_eq!(value_type.data_type(), NetworkingConfigDataType::Callback);
 
         let mut config = Self::new_uninitialized_config_value();
         config.m_eValue = value_type.into();

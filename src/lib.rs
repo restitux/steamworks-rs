@@ -425,6 +425,16 @@ pub fn networking_sockets() -> (
     }
 }
 
+pub fn init() -> SResult<()> {
+    unsafe {
+        let mut err: sys::SteamNetworkingErrMsg = [0; 1024];
+        return match sys::GameNetworkingSockets_Init(std::ptr::null(), &mut err) {
+            true => Ok(()),
+            false => Err(SteamError::InitFailed),
+        };
+    }
+}
+
 /// Used to separate client and game server modes
 pub unsafe trait Manager {
     //unsafe fn get_pipe() -> sys::HSteamPipe;

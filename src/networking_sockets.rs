@@ -1,8 +1,8 @@
 //use crate::networking_sockets_callback;
 use crate::networking_types::{
     ListenSocketEvent, MessageNumber, NetConnectionEnd, NetworkingAvailability,
-    NetworkingAvailabilityError, NetworkingConfigEntry, NetworkingIdentity, NetworkingMessage,
-    SendFlags, SteamIpAddr,
+    NetworkingAvailabilityError, NetworkingConfigEntry, NetworkingConfigValue, NetworkingIdentity,
+    NetworkingMessage, SendFlags, SteamIpAddr,
 };
 //use crate::{CallbackHandle, Inner, SResult};
 use crate::SResult;
@@ -15,6 +15,10 @@ use std::sync::mpsc::Receiver;
 use std::sync::Arc;
 
 use gamenetworkingsockets_sys as sys;
+
+unsafe extern "C" fn callback_entrypoint() {
+    println!("CALLBACK WAS CALLED");
+}
 
 struct ListenSocketCallbacks {
     sender: std::sync::mpsc::Sender<ListenSocketEvent>,
@@ -35,6 +39,11 @@ unsafe impl Send for NetworkingSockets {}
 unsafe impl Sync for NetworkingSockets {}
 
 impl NetworkingSockets {
+    pub fn run_callbacks(&self) {
+        unsafe {
+            sys::SteamAPI_ISteamNetworkingSockets_RunCallbacks(self.sockets);
+        }
+    }
     /// Creates a "server" socket that listens for clients to connect to by calling ConnectByIPAddress, over ordinary UDP (IPv4 or IPv6)
     ///
     /// You must select a specific local port to listen on and set it as the port field of the local address.
@@ -55,9 +64,16 @@ impl NetworkingSockets {
         options: impl IntoIterator<Item = NetworkingConfigEntry>,
     ) -> Result<ListenSocket, InvalidHandle> {
         let local_address = SteamIpAddr::from(local_address);
-        let options: Vec<_> = options.into_iter().map(|x| x.into()).collect();
+        let mut options: Vec<_> = options.into_iter().map(|x| x.into()).collect();
 
         // create callbacks
+        let callback_config = NetworkingConfigEntry::new_ptr(
+            NetworkingConfigValue::CallbackConnectionStatusChanged,
+            callback_entrypoint as *mut std::ffi::c_void,
+        );
+
+        //options.push(sys::SteamNetworkingConfigValue_t::from(callback_config));
+        options.push(callback_config.into());
 
         //options.push()
         let handle = unsafe {
